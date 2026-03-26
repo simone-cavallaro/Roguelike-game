@@ -1,5 +1,6 @@
 import tcod
 from actions import EscapeAction, MovementAction
+from entity import Entity
 from input_handlers import EventHandler
 
 def main() -> None:
@@ -7,8 +8,8 @@ def main() -> None:
     screen_height = 50
 
     # We’re placing the player right in the middle of the screen
-    player_x = int(screen_width / 2)
-    player_y = int(screen_height / 2)
+    #player_x = int(screen_width / 2)
+    #player_y = int(screen_height / 2)
 
     # Here, we’re telling tcod which font to use
     tileset = tcod.tileset.load_tilesheet(

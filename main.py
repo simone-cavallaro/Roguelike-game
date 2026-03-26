@@ -20,6 +20,12 @@ def main() -> None:
     # We’ll use it to receive events and process them
     event_handler = EventHandler()
 
+    # We’re importing the Entity class into main.py, and using it to initialize the player and a new NPC. 
+    # We store these two in a set, that will eventually hold all our entities on the map.
+    player = Entity(int(screen_width / 2), int(screen_height / 2), "@", (255, 255, 255))
+    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), "@", (255, 255, 0))
+    entities = {npc, player}
+
     # This part is what actually creates the screen
     with tcod.context.new_terminal(
         screen_width,
@@ -36,7 +42,8 @@ def main() -> None:
         # This is what’s called our ‘game loop’. 
         # Basically, this is a loop that won’t ever end, until we close the screen. Every game has some sort of game loop or another.
         while True:
-            root_console.print(x = player_x, y = player_y, string = "@") # This line is what tells the program to actually put the “@” symbol on the screen in its proper place. 
+           # root_console.print(x = player_x, y = player_y, string = "@") # This line is what tells the program to actually put the “@” symbol on the screen in its proper place. 
+            root_console.print(x = player.x, y = player.y, string = player.char, fg = player.color)
                                                           # We’re telling the root_console we created to print the “@” symbol at the given x and y coordinates.
             # Without this line, nothing would actually print out on the screen. 
             # This is because context.present is what actually updates the screen with what we’ve told it to display so far.
@@ -61,8 +68,9 @@ def main() -> None:
                 # Regardless of what the value is, we add dx and dy to player_x and player_y, respectively. 
                 # Because the console is using player_x and player_y to draw where our “@” symbol is, modifying these two variables will cause the symbol to move.
                 if isinstance(action, MovementAction):
-                    player_x += action.dx
-                    player_y += action.dy
+                    # player_x += action.dx
+                    # player_y += action.dy
+                    player.move(dx = acton.dx, dy = action.dy)
                 
                 elif isinstance(action, EscapeAction):
                     raise SystemExit

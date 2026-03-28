@@ -3,7 +3,6 @@ from typing import Set, Iterable, Any
 from tcod.context import Context
 from tcod.console import Console
 
-from actions import EscapeAction, MovementAction
 from entity import Entity
 from game_map import GameMap
 from input_handlers import EventHandler
@@ -30,12 +29,7 @@ class Engine:
             if action is None:
                 continue
             
-            if isinstance(action, MovementAction):
-                if self.game_map.tiles["walkable"][self.player.x + action.dx, self.player.y + action.dy]:
-                    self.player.move(dx=action.dx, dy=action.dy)
-            
-            elif isinstance(action, EscapeAction):
-                raise SystemExit()
+            action.perform(self, self.player)
     
     # This handles drawing our screen. 
     # We iterate through the self.entities and print them to their proper locations, then present the context, and clear the console, like we did in main.py.

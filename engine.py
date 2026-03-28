@@ -5,6 +5,7 @@ from tcod.console import Console
 
 from actions import EscapeAction, MovementAction
 from entity import Entity
+from game_map import GameMap
 from input_handlers import EventHandler
 
 class Engine:
@@ -16,9 +17,10 @@ class Engine:
     # - player is the player Entity. We have a separate reference to it outside of entities for ease of access. 
     #     We’ll need to access player a lot more than a random entity in entities.
 
-    def __init__(self, entities: Set[Entity], event_handler: EventHandler, player: Entity):
+    def __init__(self, entities: Set[Entity], event_handler: EventHandler,game_map: GameMap, player: Entity):
         self.entities = entities
         self.event_handler = event_handler
+        self.game_map = game_map
         self.player = player
 
     def handle_events(self, events: Iterable[Any]) -> None:
@@ -29,7 +31,8 @@ class Engine:
                 continue
             
             if isinstance(action, MovementAction):
-                self.player.move(dx=action.dx, dy=action.dy)
+                if self.game_map.tiles["walkable"][self.player.x + action.dx, self.player.y + action.dy]:
+                    self.player.move(dx=action.dx, dy=action.dy)
             
             elif isinstance(action, EscapeAction):
                 raise SystemExit()
@@ -37,6 +40,8 @@ class Engine:
     # This handles drawing our screen. 
     # We iterate through the self.entities and print them to their proper locations, then present the context, and clear the console, like we did in main.py.
     def render(self, console: Console, context: Context) -> None:
+        self.game_map.render(console)
+
         for entity in self.entities:
             console.print(entity.x, entity.y, entity.char, fg=entity.color)
 
